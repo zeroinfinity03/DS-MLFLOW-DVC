@@ -135,6 +135,7 @@ FULL_DS_PROJECT/
 	•	This makes the model available for remote access during deployment
 	•	Example logic in register_model.py:
 
+```bash
 import mlflow
 import mlflow.sklearn
 
@@ -146,7 +147,8 @@ with mlflow.start_run():
     mlflow.sklearn.log_model(model, "model")
     mlflow.register_model("runs:/<run_id>/model", "CreditRiskModel")
 
-	•	✅ By the time deployment begins, the ML model is already registered on AWS and ready to be accessed by the API.
+```
+✅ By the time deployment begins, the ML model is already registered on AWS and ready to be accessed by the API.
 
 ⸻
 
