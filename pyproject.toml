@@ -1,0 +1,32 @@
+[project]
+name = "full-ds-project"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "boto3>=1.39.6",
+    "docker>=7.1.0",
+    "dvc>=3.61.0",
+    "fastapi>=0.116.1",
+    "joblib>=1.5.1",
+    "jupyter>=1.1.1",
+    "matplotlib>=3.10.3",
+    "mlflow>=3.1.1",
+    "numpy>=2.1.3",
+    "pandas>=2.3.1",
+    "pingouin>=0.5.5",
+    "polars>=1.31.0",
+    "prophet>=1.1.7",
+    "pydantic>=2.11.7",
+    "python-multipart>=0.0.20",
+    "requests>=2.32.4",
+    "scikit-learn>=1.7.0",
+    "scipy>=1.16.0",
+    "seaborn>=0.13.2",
+    "statsmodels>=0.14.5",
+    "tensorflow>=2.14.0",
+    "torch>=2.7.1",
+    "transformers>=4.53.2",
+    "uvicorn>=0.35.0",
+]
