@@ -46,14 +46,15 @@ FULL_DS_PROJECT/
 │   ├── cleaning.ipynb
 │   └── fe.ipynb
 ├── 3.experiments/                 ← MLflow experiments
-├── 4.dvc_pipeine/                 ← DVC pipeline scripts
-│   ├── 1.get_data.py
-│   ├── 2.prep_clean_data.py
+├── 4.dvc_pipeline/                ← DVC pipeline scripts
+│   ├── 1.data_ingestion.py
+│   ├── 2.data_preprocessing.py
 │   ├── 3.FE.py
-│   ├── 4.split_data.py
-│   ├── 5.train_model.py
-│   ├── 6.evaluate_model.py
-│   ├── 7.register_model.py
+│   ├── 4.feature_selection.py
+│   ├── 5.split_data.py           ← (Optional step)
+│   ├── 6.train_model.py
+│   ├── 7.evaluate_model.py
+│   ├── 8.register_model.py
 │   ├── dvc.yaml
 │   └── params.yaml
 ├── 5.testing/                     ← Model readiness checks
@@ -170,7 +171,6 @@ with mlflow.start_run():
 ## 🔹 What Needs to Be Ready Before Running `register_model.py`
 
 To successfully register your model to MLflow (hosted on AWS), the following infrastructure must already be in place:
-
 |-----------------------|------------------------------|------------------------------------------------------------|
 | **Component**         | **Where to Set It Up**       | **Purpose**                                                |
 |-----------------------|------------------------------|------------------------------------------------------------|
@@ -178,7 +178,6 @@ To successfully register your model to MLflow (hosted on AWS), the following inf
 | Artifact Store        | Amazon S3 Bucket             | Stores model files (e.g., `model.pkl`, logs, checkpoints)  |
 | Credentials           | IAM role or AWS access keys  | Grants permission to log to S3 and access tracking server  |
 |-----------------------|------------------------------|------------------------------------------------------------|
-
 
 ✅ Why before?
 
