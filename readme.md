@@ -73,10 +73,6 @@ FULL_DS_PROJECT/
 
 
 
-
-
-
-
 ## 🔁 Industry-Grade Lifecycle of a Data Science Project
 
 ### 1. Notebooks (EDA, Cleaning, Feature Engineering)
@@ -235,7 +231,7 @@ Script: 5.testing/performance.py
 
 ---
 
-## 🚀 6. Production & Deployment
+## 🚀 6. Production 
 
 * Add `6.production/` folder
 
@@ -243,11 +239,38 @@ Script: 5.testing/performance.py
   * Contains FastAPI/Flask `app.py`
   * Loads model from MLflow or local registry
 
+---
+
+
+## 🚀 7. Deployment
+
 * Add `7.deploy/` folder
 
   * Contains `Dockerfile`, `start.sh`, and CI/CD scripts
   * Used for containerization and pushing to cloud (e.g., AWS/GCP)
   * Now we deploy backend api in AWS(by dockerizing the api), our ML Model is already stored in the model registry, and model registry is already in the AWS, so anyone can access it.
+
+* Step1: We dockerize the api -> store it in the Amazon ECR service(Elastic Container Registery)
+
+* Step2: Retrieve the file from ECR and deploy to AWS EC2 instance
+{first we have to start an EC2 instance then we will pull the image from ECR}
+
+* Step3: Now we have to run the docker image in the ec2 instance then our api will be live.
+
+
+## NOTE:
+1. We should not deploy our app(api) in just 1 single instance of EC2, but We should use multiple servers(2 or 3 EC2 insatnces)
+
+2. We will pull the docker image from ECR and deploy it in all these 3 instances, then run all these three.(even if 1 is down our app will keep running)
+
+3. When my frontend will communicate with backend, how will it know which server to communicate with??
+So we use LoadBalancer, frontend will communicate with LoadBalancer. (LB monitors all three servers and whichever has least load it will send the fronetend request to that server.)
+
+4. How do we know we have to use 3 servers only?
+
+
+
+5. We did alot manual setup here, so we us github actions for CI/CD pipeline
 
 
 ---
