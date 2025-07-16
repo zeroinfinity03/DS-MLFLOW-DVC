@@ -248,29 +248,47 @@ Script: 5.testing/performance.py
 
   * Contains `Dockerfile`, `start.sh`, and CI/CD scripts
   * Used for containerization and pushing to cloud (e.g., AWS/GCP)
-  * Now we deploy backend api in AWS(by dockerizing the api), our ML Model is already stored in the model registry, and model registry is already in the AWS, so anyone can access it.
+  * Now we deploy backend API to AWS (by dockerizing the API). Our ML model is already stored in the model registry, and the model registry is already in AWS, so anyone can access it.
 
-* Step1: We dockerize the api -> store it in the Amazon ECR service(Elastic Container Registery)
+* Step 1: We dockerize the API → store it in Amazon ECR (Elastic Container Registry)
 
-* Step2: Retrieve the file from ECR and deploy to AWS EC2 instance
-{first we have to start an EC2 instance then we will pull the image from ECR}
+* Step 2: Retrieve the image from ECR and deploy it to an AWS EC2 instance  
+  (First we launch the EC2 instance, then pull the image from ECR)
 
-* Step3: Now we have to run the docker image in the ec2 instance then our api will be live.
-
+* Step 3: Run the Docker image inside the EC2 instance → API goes live!
 
 ## NOTE:
-1. We should not deploy our app(api) in just 1 single instance of EC2, but We should use multiple servers(2 or 3 EC2 insatnces)
+1. We should **not deploy the app (API)** on just one EC2 instance. Instead, use multiple servers (e.g., 2–3 EC2 instances).
 
-2. We will pull the docker image from ECR and deploy it in all these 3 instances, then run all these three.(even if 1 is down our app will keep running)
+2. We pull the same Docker image from ECR to all these instances and run them in parallel.  
+   👉 If one instance goes down, the app keeps running on others.
 
-3. When my frontend will communicate with backend, how will it know which server to communicate with??
-So we use LoadBalancer, frontend will communicate with LoadBalancer. (LB monitors all three servers and whichever has least load it will send the fronetend request to that server.)
+3. How does the frontend know which server to hit?  
+   👉 We use a **Load Balancer** — frontend sends requests to the Load Balancer, which routes them to the EC2 instance with the least load.
 
-4. How do we know we have to use 3 servers only?
+4. How do we decide how many servers to run?  
+   👉 We use **AWS Auto Scaling Group**.  
+   Define min & max capacity — AWS adjusts server count based on traffic.
 
+5. What if we update the API code?
 
+   - Rebuild the API  
+   - Dockerize it  
+   - Push the new Docker image to ECR  
+   - Pull this updated image into each EC2 instance
 
-5. We did alot manual setup here, so we us github actions for CI/CD pipeline
+   ❗ If 4 EC2 instances are running, and we redeploy manually, all 4 may restart at once → downtime risk.  
+   ✅ To avoid this, we use **Deployment Strategies**:
 
+   a. **Rolling Update** → update 1–2 servers at a time (zero downtime)  
+   b. **Blue-Green Deployment** → maintain old & new versions, switch traffic after testing new version
+
+   ✅ Use **AWS CodeDeploy** to automate this!
 
 ---
+
+### 🔁 Finally:
+
+> **This is a lot of manual DevOps.**  
+> That’s why we use **GitHub Actions for CI/CD pipeline**.  
+> Once pipeline stages are defined (build → test → deploy), GitHub Actions automatically handles all steps.
