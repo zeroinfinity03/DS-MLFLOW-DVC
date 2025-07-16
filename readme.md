@@ -81,6 +81,10 @@ FULL_DS_PROJECT/
 * Use Jupyter to understand patterns, distributions, and generate features
 * Cleaning and feature ideas are prototyped here before converting to scripts
 
+
+
+
+
 ### 2. Experimentation with MLflow
 
 * Use `mlflow` to try different models, track hyperparameters and scores
@@ -92,6 +96,11 @@ FULL_DS_PROJECT/
 * This will be used in DVC pipeline
 
 ---
+
+
+
+
+
 
 ## ⚙️ 4. DVC Pipeline: Automate Data → Model Flow
 
@@ -112,17 +121,21 @@ FULL_DS_PROJECT/
 | Avoid retraining needlessly     | ✅ Yes        |
 | Re-run stages only if needed    | ✅ Yes        |
 
-### ✅ What Goes Inside the Pipeline
+## ✅ What Goes Inside the DVC Pipeline
 
-| Task                | Inside DVC? | Notes                |
-| ------------------- | ----------- | -------------------- |
-| EDA & exploration   | ❌ No        | Done in notebook     |
-| Cleaning logic      | ✅ Yes       | `prep_clean_data.py` |
-| Feature engineering | ✅ Yes       | `FE.py`              |
-| Train/test split    | ✅ Optional  | `split_data.py`      |
-| Model training      | ✅ Yes       | `train_model.py`     |
-| Evaluation          | ✅ Yes       | `evaluate_model.py`  |
-| Model registry      | ✅ Yes       | `register_model.py`  |
+|------------------------|--------------|--------------------------|
+| **Task**              | **Inside DVC?** | **Script Name**        |
+|------------------------|--------------|--------------------------|
+| EDA & exploration     | ❌ No         | Done in notebook         |
+| Data ingestion        | ✅ Yes        | data_ingestion.py        |
+| Data preprocessing    | ✅ Yes        | data_preprocessing.py    |
+| Feature engineering   | ✅ Yes        | FE.py                    |
+| Feature selection     | ✅ Yes        | feature_selection.py     |
+| Train/Test Split      | ✅ Optional   | split_data.py            |
+| Model training        | ✅ Yes        | train_model.py           |
+| Evaluation            | ✅ Yes        | evaluate_model.py        |
+| Model registry        | ✅ Yes        | register_model.py        |
+|------------------------|--------------|--------------------------|
 
 ## NOTE_1:
 ✅ In This Step (4.dvc_pipeline/7.register_model.py)
@@ -146,28 +159,26 @@ with mlflow.start_run():
 ```
 ✅ By the time deployment begins, the ML model is already registered on AWS and ready to be accessed by the API.
 
-⸻
 
 
 ## NOTE_2:
 
 ✅ When to Set Up MLflow on AWS (Tracking + S3)
-	•	You must set up the MLflow tracking server and S3 artifact store before running:
-
-4.dvc_pipeline/7.register_model.py
+	•	You must set up the MLflow tracking server and S3 artifact store before running: 4.dvc_pipeline/7.register_model.py
 
 
-⸻
+## 🔹 What Needs to Be Ready Before Running `register_model.py`
 
-🔹 What needs to be ready beforehand?
+To successfully register your model to MLflow (hosted on AWS), the following infrastructure must already be in place:
 
-Component	Where to set it up	Purpose
-MLflow tracking URI	On AWS EC2 (or ECS)	Stores experiment runs, metrics, metadata
-Artifact store	Amazon S3 bucket	Stores model files (model.pkl, logs, etc.)
-Credentials	IAM role or access keys	Allows MLflow to upload to S3
+|-----------------------|------------------------------|------------------------------------------------------------|
+| **Component**         | **Where to Set It Up**       | **Purpose**                                                |
+|-----------------------|------------------------------|------------------------------------------------------------|
+| MLflow Tracking URI   | AWS EC2 (or ECS container)   | Stores experiment metadata, hyperparameters, metrics, etc. |
+| Artifact Store        | Amazon S3 Bucket             | Stores model files (e.g., `model.pkl`, logs, checkpoints)  |
+| Credentials           | IAM role or AWS access keys  | Grants permission to log to S3 and access tracking server  |
+|-----------------------|------------------------------|------------------------------------------------------------|
 
-
-⸻
 
 ✅ Why before?
 
@@ -201,6 +212,13 @@ mlflow.set_tracking_uri("https://<your-mlflow-server-on-aws>")
 🧠 You write logic ONCE → ⚙️ DVC reruns when inputs change
 
 ---
+⸻
+
+
+
+
+
+
 
 ## 🧪 5. Testing: Model Readiness Before Deployment
 
@@ -231,6 +249,13 @@ Script: 5.testing/performance.py
 
 ---
 
+
+
+
+
+
+
+
 ## 🚀 6. Production 
 
 * Add `6.production/` folder
@@ -240,6 +265,12 @@ Script: 5.testing/performance.py
   * Loads model from MLflow or local registry
 
 ---
+
+
+
+
+
+
 
 
 ## 🚀 7. Deployment
